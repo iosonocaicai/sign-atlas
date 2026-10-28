@@ -920,6 +920,22 @@ html:where([data-theme="light"]),:where(html[data-theme="light"]) body{backgroun
 .stackfig .conn{pointer-events:none;}
 .stackfig .layer__hit{position:absolute;inset:0;pointer-events:auto;cursor:pointer;}
 
+/* ---------- layer stack, matched to the design file ----------
+   The Figma export wrapped each plate SVG in an inset box, which shrank the
+   plates 25–50% and left the guide lines stranded. The SVGs are drawn on the
+   full 286x150 layer frame, so they fill it 1:1. */
+.stackfig .gg,.stackfig .gg > div{inset:0!important;}
+/* plates use their own artwork colours: no tint, no fade, no glow */
+.stackfig .lv--def img{filter:none!important;opacity:1!important;}
+.stackfig .lv--sel img{filter:none!important;}
+/* guide lines: 1px dotted (dash 1 / gap 2) */
+.stackfig .conn{background:none!important;
+  background-image:repeating-linear-gradient(to bottom,var(--conn-dot) 0,var(--conn-dot) 1px,transparent 1px,transparent 3px)!important;}
+:root[data-theme="dark"]{--conn-dot:#2a2926;}
+:root[data-theme="light"]{--conn-dot:#d4d2cd;}
+/* the centre axis runs unbroken from the top plate to the base */
+.stackfig .conn--axis{height:207px!important;}
+
 </style>
 </head>
 <body>
@@ -1141,9 +1157,7 @@ html:where([data-theme="light"]),:where(html[data-theme="light"]) body{backgroun
             <div class="conn" style="left:262px;top:230px"></div>
             <div class="conn" style="left:250px;top:160px"></div>
             <div class="conn" style="left:238px;top:90.5px"></div>
-            <div class="conn" style="left:167px;top:122px"></div>
-            <div class="conn" style="left:167px;top:197px"></div>
-            <div class="conn" style="left:167px;top:270px"></div>
+            <div class="conn conn--axis" style="left:167px;top:121px"></div>
             </div>
           </div>
 
