@@ -824,6 +824,12 @@ html:where([data-theme="light"]),:where(html[data-theme="light"]) body{backgroun
 /* variable the dark markup references that the light sheet never declared */
 :root[data-theme="light"]{--color-text-primary-alt:var(--color-text-primary);}
 
+/* ---------- layer stack: hit areas follow the drawn plates ---------- */
+.stackfig .layer{pointer-events:none;}
+/* the hairline axis between plates must not steal the pointer */
+.stackfig .conn{pointer-events:none;}
+.stackfig .layer__hit{position:absolute;inset:0;pointer-events:auto;cursor:pointer;}
+
 </style>
 </head>
 <body>
@@ -2514,6 +2520,60 @@ else mountAll();
       window.dispatchEvent(new Event('resize'));
     });
   });
+})();
+</script>
+<script>
+/* ---------- layer stack: hit areas follow the drawn plates ----------
+   Each layer button is a 286x150 box but the plate inside it is a thin
+   isometric slab, and the boxes overlap by more than half — so the box of
+   the layer above used to swallow the top of the plate below. Each button
+   now gets a hit shape traced from its plate's own SVG outline. */
+(function(){
+  /* plate outline in the SVG's 286x150 space: left x, right x, top y, bottom y, slab thickness */
+  var PLATE={1:[35.7,249.9,19.72,113.56],2:[47.6,238,25.16,108.12],3:[59.5,226.1,29.92,103.36],4:[71.4,214.2,35.36,97.92]};
+  var MID=66.64, T=12.24, PAD=4;
+  var layers=document.querySelectorAll('.stackfig .layer[data-layer]');
+  if(!layers.length)return;
+  layers.forEach(function(b){
+    if(b.querySelector('.layer__hit'))return;
+    var h=document.createElement('span');h.className='layer__hit';h.setAttribute('aria-hidden','true');
+    b.insertBefore(h,b.firstChild);
+  });
+  function trace(){
+    /* 1. plate hexagons in page px */
+    var shapes=[];
+    layers.forEach(function(b){
+      var p=PLATE[b.dataset.layer],img=b.querySelector('.lv--def img'),hit=b.querySelector('.layer__hit');
+      if(!p||!img||!hit)return;
+      var br=b.getBoundingClientRect(),ir=img.getBoundingClientRect();
+      if(!br.width||!ir.width)return;
+      /* the SVG is drawn "meet"-fitted and centred inside the img box */
+      var s=Math.min(ir.width/286,ir.height/150),ox=ir.left+(ir.width-286*s)/2,oy=ir.top+(ir.height-150*s)/2;
+      var X=function(v){return ox+v*s;},Y=function(v){return oy+v*s;};
+      var cx=(p[0]+p[1])/2;
+      shapes.push({b:b,br:br,hit:hit,n:+b.dataset.layer,
+        pts:[[X(cx),Y(p[2])],[X(p[1]),Y(MID)],[X(p[1]),Y(MID+T)],[X(cx),Y(p[3]+T)],[X(p[0]),Y(MID+T)],[X(p[0]),Y(MID)]]});
+    });
+    shapes.sort(function(a,b){return a.n-b.n;});           /* 1 = bottom plate */
+    /* 2. split each vertical gap between neighbours, so moving down the
+          stack hands over straight from one layer to the next */
+    shapes.forEach(function(sh,i){
+      var below=shapes[i-1],above=shapes[i+1],pad=PAD*(sh.br.width/286);
+      sh.top=above?(above.pts[3][1]+sh.pts[0][1])/2:sh.pts[0][1]-pad;
+      sh.bot=below?(below.pts[0][1]+sh.pts[3][1])/2:sh.pts[3][1]+pad;
+    });
+    shapes.forEach(function(sh){
+      /* a band as wide as the plate, from the middle of the gap above to the middle of the gap below */
+      var pad=PAD*(sh.br.width/286),l=sh.pts[5][0]-pad,r=sh.pts[1][0]+pad;
+      var q=[[l,sh.top],[r,sh.top],[r,sh.bot],[l,sh.bot]];
+      sh.hit.style.clipPath='polygon('+q.map(function(v){
+        return ((v[0]-sh.br.left)/sh.br.width*100).toFixed(2)+'% '+((v[1]-sh.br.top)/sh.br.height*100).toFixed(2)+'%';
+      }).join(',')+')';
+    });
+  }
+  trace();
+  window.addEventListener('load',trace);
+  window.addEventListener('resize',trace);
 })();
 </script>
 </body>
