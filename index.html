@@ -2,20 +2,30 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SIGN Atlas Pages</title>
 <style>
-:root{--bg:#f6f5f2;--fg:#1c1b19;--mute:#6b6963;--line:#dedbd4;--card:#fff}
-@media (prefers-color-scheme:dark){:root{--bg:#121211;--fg:#ecebe7;--mute:#9a978f;--line:#2a2926;--card:#1a1a18}}
+:root{--bg:#f6f5f2;--fg:#1c1b19;--mute:#6b6963;--line:#dedbd4;--card:#fff;--accent:#e86a00}
+@media (prefers-color-scheme:dark){:root{--bg:#121211;--fg:#ecebe7;--mute:#9a978f;--line:#2a2926;--card:#1a1a18;--accent:#ff8a1f}}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,sans-serif}
 main{max-width:720px;margin:0 auto;padding:64px 16px}
-h1{font-weight:400;font-size:28px;margin:0 0 8px}p{color:var(--mute);margin:0 0 32px}
-a{display:block;padding:18px 20px;margin-bottom:12px;background:var(--card);border:1px solid var(--line);border-radius:8px;color:inherit;text-decoration:none}
-a:hover{border-color:var(--mute)}
-h2{font:500 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:40px 0 12px}
+h1{font-weight:400;font-size:28px;margin:0 0 8px}
+.lead{color:var(--mute);margin:0 0 32px}
+a.card{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px;margin-bottom:12px;background:var(--card);border:1px solid var(--line);border-radius:8px;color:inherit;text-decoration:none}
+a.card:hover{border-color:var(--mute)}
+.name{font-size:18px}
+.sub{display:block;color:var(--mute);font-size:13px;margin-top:2px}
+.modes{display:flex;gap:6px;font:500 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase}
+.mode{padding:6px 8px;border:1px solid var(--line);border-radius:4px;color:var(--mute)}
+.mode.is-default{border-color:var(--accent);color:var(--accent)}
+.note{color:var(--mute);font-size:13px;margin-top:24px}
 </style></head><body><main>
-<h1>SIGN — Technology for Sovereign Nations</h1><p>Page versions</p>
-<h2>Dark</h2>
-<a href="1793180326480_sign-national-atlas_1.html">Design 01 — Dark</a>
-<a href="1793180326480_sign-national-atlas.html">Design 02 — Dark</a>
-<h2>Light</h2>
-<a href="1793180326480_sign-national-atlas-light.html">Design 03 — Light</a>
-<a href="1793180326481_sign-atlas-hero-v2-light.html">Design 04 — Light</a>
+<h1>SIGN — Technology for Sovereign Nations</h1>
+<p class="lead">Page versions</p>
+<a class="card" href="design-01.html">
+  <span><span class="name">Design 01</span><span class="sub">National Atlas: framed hero video</span></span>
+  <span class="modes"><span class="mode is-default">Dark · default</span><span class="mode">Light</span></span>
+</a>
+<a class="card" href="design-02.html">
+  <span><span class="name">Design 02</span><span class="sub">Full-bleed flag hero</span></span>
+  <span class="modes"><span class="mode is-default">Light · default</span><span class="mode">Dark</span></span>
+</a>
+<p class="note">Both designs have two modes: switch between Light and Dark with the toggle in the top-right of the navigation.</p>
 </main></body></html>
